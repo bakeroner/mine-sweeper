@@ -1,11 +1,7 @@
-const beginnerButton = document.getElementById("beginnerButton");
-const amateurButton = document.getElementById("amateurButton");
-const professionalButton = document.getElementById("professionalButton");
-const expertButton = document.getElementById("expertButton");
-
 const gameField = document.getElementById("gameField");
 const gameWindow = document.getElementById("gameWindow");
 const menuBlock = document.getElementById("menuBlock");
+let game;//variable for a new game class object
 
 class MineGame {
 
@@ -13,6 +9,10 @@ class MineGame {
 		/*variables*/
 		this.fieldHeight = fieldHeight;
 		this.fieldWidth = fieldWidth;
+		this.areaNearCurrentTarget = [];
+		this.minesNear = 0;
+		this.targetX = 0;
+		this.targetY = 0;
 		this.storage = {
 		minesNumber: minesNumber,
 		flagsNumber: minesNumber,
@@ -46,14 +46,50 @@ class MineGame {
 					minesCounter--;
 					this.storage.minesPlacement.push(currentPosition);
 				}
+			}		
+		}
+	}
+	areaNearCurrentTargetCalculate () {
+		for (let i = this.targetX-1; i<=this.targetX+1; i++) {//One day i use jQuery for it
+			for (let j = this.targetY-1; j<=this.targetY+1; j++) {
+				let currentCell = {x: i, y: j};
+				this.areaNearCurrentTarget.push(currentCell);
 			}
-			//console.log(this.storage.minesPlacement);			
 		}
 	}
 	cellOpener (currentTarget) {
 		/*open cell show mines number open empty cells*/
 		/*How to catch class object name?*/
+		if (currentTarget.classList.contains("cellClass"))
+		{
+			this.areaNearCurrentTargetCalculate();
+			let areaNear = this.areaNearCurrentTarget;
+			let currentTargetX = this.targetX;
+			let currentTargetY = this.targetY;
+			let minesNearby = 0;
+			console.log(currentTarget);
+			currentTarget.classList.toggle("cellClass");
+			currentTarget.classList.add("cellClassOpen");
+			this.storage.minesPlacement.forEach(function (elem) {	
+				for (let i=0; i<areaNear.length; i++) {
+					if (areaNear[i].x == elem.x && areaNear[i].y == elem.y) {
+						minesNearby++;
+						if (elem.x == +currentTargetX && elem.y == +currentTargetY) {
+							alert("You lose.");
+						}
+					}
+				}
+			})
+			this.minesNear = minesNearby;
+			if (this.minesNear) {
+				let item = document.createElement("p");
+				item.classList.add("cellText");
+				item.innerHTML = this.minesNear;
+				currentTarget.appendChild(item);
+			}
+		}
 	}
+
 	winCheck () {
 		/*checking end of the game showing Congratulation Menu*/
 		this.storage.correctFlags = this.storage.minesNumber;
@@ -65,68 +101,35 @@ class MineGame {
 	}
 
 }
-
-beginnerButton.addEventListener("click", function (event) {
-	/*creating object with current difficlty variables hiding menu showing field*/
+menuBlock.addEventListener("click", function (event) {
+	let target = event.target;
+	switch (target) {
+		case document.querySelector('#beginnerButton'):
+		game = new MineGame(9,9,10);
+		gameField.classList.toggle("beginnerField");
+		break;
+		case document.querySelector('#amateurButton'):
+		game = new MineGame(16,16,40);
+		gameField.classList.toggle("amateurField");
+		break;
+		case document.querySelector('#expertButton'):
+		game = new MineGame(16,30,99);
+		gameField.classList.toggle("expertField");
+		break;
+	}
 	menuBlock.classList.toggle("hideElement");
 	gameWindow.classList.toggle("hideElement");
-	gameField.classList.toggle("beginnerField");
-	let beginner = new MineGame(9,9,10); /*!!!!!!!!!!!!!!!Set with correct attrs for all difficulties*/
-	beginner.fieldBuilder();
-
-/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-	gameField.addEventListener("click", function (event) {
+	game.fieldBuilder();
+})
+gameField.addEventListener("click", function (event) {
 	/*using event delegation on field elements to open*/
 	let target = event.target;
-	let targetX = +target.dataset.x;
-	let targetY = +target.dataset.y;
-	let areaNear = [];
-	let minesNear = 0;
-	for (let i = targetX-1; i<=targetX+1; i++) {//One day i use jQuery for it
-		for (let j = targetY-1; j<=targetY+1; j++) {
-			let currentCell = {x: i, y: j};
-			areaNear.push(currentCell);
-		}
-	}
-	if (target.classList.contains("cellClass"))
-	{
-		console.log(target);
-		target.classList.toggle("cellClass");
-		target.classList.add("cellClassOpen");
-		beginner.storage.minesPlacement.forEach(function (elem) {/*Object using trouble*/	
-			for (let i=0; i<areaNear.length; i++) {
-				if (areaNear[i].x == elem.x && areaNear[i].y == elem.y) {
-					minesNear++;
-					if (elem.x == +targetX && elem.y == +targetY) {
-						alert("You lose.");
-					}
-				}
-			}
-		})
-		if (minesNear) {
-			console.log("MinesNear " + minesNear);
-			let item = document.createElement("p");
-			item.classList.add("cellText");
-			item.innerHTML = minesNear;
-			target.appendChild(item);
-		}
-	}
-/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
-
-
-	})
-	})
+	game.targetX = +target.dataset.x;
+	game.targetY = +target.dataset.y;
+	game.cellOpener(target);
+})
 gameField.addEventListener("contextmenu", function (event) {
 	/*using event delegation on field elements to set flag*/
 	let target = event.target;
 	console.log("Right click catch");
-	})
-
-/*amateurButton.addEventListener("click", function (event) {
-	menuBlock.classList.toggle("hideElement");
-	let amateur = new MineGame(16,16,40);
-	})
-expertButton.addEventListener("click", function (event) {
-		menuBlock.classList.toggle("hideElement");
-		let professional = new MineGame(16,30,99);
-	})*/
+})

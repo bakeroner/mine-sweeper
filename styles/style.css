@@ -100,6 +100,14 @@ body {
 	width: 306px;/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 	height: 306px;
 }
+.amateurField {
+	width: 544px;/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+	height: 544px;
+}
+.expertField {
+	width: 1020px;/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+	height: 544px;
+}
 .cellText {
 	color: blue;
 	margin: 0;
