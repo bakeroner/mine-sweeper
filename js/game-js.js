@@ -49,13 +49,16 @@ class MineGame {
 			}		
 		}
 	}
-	areaNearCurrentTargetCalculate () {
+	areaNearCurrentTargetCalculate () {//try use querySelector
 		for (let i = this.targetX-1; i<=this.targetX+1; i++) {//One day i use jQuery for it
 			for (let j = this.targetY-1; j<=this.targetY+1; j++) {
 				let currentCell = {x: i, y: j};
-				this.areaNearCurrentTarget.push(currentCell);
+				let elementNearby = document.querySelector('[data-x=' + '"' + i + '"' + '][data-y=' + '"' + j + '"' + ']');
+				//console.log(elementNearby);
+				this.areaNearCurrentTarget.push(elementNearby);
 			}
 		}
+
 	}
 	cellOpener (currentTarget) {
 		/*open cell show mines number open empty cells*/
@@ -64,19 +67,23 @@ class MineGame {
 		{
 			this.areaNearCurrentTargetCalculate();
 			let areaNear = this.areaNearCurrentTarget;
+			let minesArray = this.storage.minesPlacement;
 			let currentTargetX = this.targetX;
 			let currentTargetY = this.targetY;
 			let minesNearby = 0;
-			console.log(currentTarget);
+			//console.log(currentTarget);
 			currentTarget.classList.toggle("cellClass");
 			currentTarget.classList.add("cellClassOpen");
-			this.storage.minesPlacement.forEach(function (elem) {	
-				for (let i=0; i<areaNear.length; i++) {
-					if (areaNear[i].x == elem.x && areaNear[i].y == elem.y) {
+			this.areaNearCurrentTarget.forEach(function (elem) {//avoid this!!!	
+				for (let i = 0; i<minesArray.length; i++) {
+					if (+elem.dataset.x == minesArray[i].x && +elem.dataset.y == minesArray[i].y) {// [4] is array center
 						minesNearby++;
-						if (elem.x == +currentTargetX && elem.y == +currentTargetY) {
+						console.log(minesNearby);
+						if (currentTargetX == +elem.dataset.x && currentTargetY == +elem.dataset.y) {
 							alert("You lose.");
-						}
+						}		
+						//console.log("mine-x: " + elem.x + "mine-y: " + elem.y);
+						//console.log("target-x: " + +areaNear[5].dataset.x + "target-y: " + areaNear[5].dataset.y);
 					}
 				}
 			})
@@ -87,13 +94,18 @@ class MineGame {
 				item.innerHTML = this.minesNear;
 				currentTarget.appendChild(item);
 			}
+			else {
+				/* Opening empty cells goes here*/
+				
+			}
 		}
 	}
 
 	winCheck () {
 		/*checking end of the game showing Congratulation Menu*/
-		this.storage.correctFlags = this.storage.minesNumber;
+		if (this.storage.correctFlags == this.storage.minesNumber) {
 		alert("That's all, you won!");
+		}
 	}
 	timer () {
 		/*count starting after the first click*/
@@ -116,6 +128,7 @@ menuBlock.addEventListener("click", function (event) {
 		game = new MineGame(16,30,99);
 		gameField.classList.toggle("expertField");
 		break;
+		default: break;
 	}
 	menuBlock.classList.toggle("hideElement");
 	gameWindow.classList.toggle("hideElement");
@@ -127,6 +140,7 @@ gameField.addEventListener("click", function (event) {
 	game.targetX = +target.dataset.x;
 	game.targetY = +target.dataset.y;
 	game.cellOpener(target);
+	game.winCheck();
 })
 gameField.addEventListener("contextmenu", function (event) {
 	/*using event delegation on field elements to set flag*/
