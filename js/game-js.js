@@ -50,6 +50,7 @@ class MineGame {
 		}
 	}
 	areaNearCurrentTargetCalculate () {//try use querySelector
+		this.areaNearCurrentTarget = [];
 		for (let i = this.targetX-1; i<=this.targetX+1; i++) {//One day i use jQuery for it
 			for (let j = this.targetY-1; j<=this.targetY+1; j++) {
 				let currentCell = {x: i, y: j};
@@ -65,38 +66,36 @@ class MineGame {
 		/*How to catch class object name?*/
 		if (currentTarget.classList.contains("cellClass"))
 		{
+			this.targetX = +currentTarget.dataset.x;
+			this.targetY = +currentTarget.dataset.y;
 			this.areaNearCurrentTargetCalculate();
 			let areaNear = this.areaNearCurrentTarget;
 			let minesArray = this.storage.minesPlacement;
-			let currentTargetX = this.targetX;
-			let currentTargetY = this.targetY;
-			let minesNearby = 0;
-			//console.log(currentTarget);
-			currentTarget.classList.toggle("cellClass");
+			let minesNearby = this.minesNear;
+			currentTarget.classList.remove("cellClass");
 			currentTarget.classList.add("cellClassOpen");
 			this.areaNearCurrentTarget.forEach(function (elem) {//avoid this!!!	
 				for (let i = 0; i<minesArray.length; i++) {
 					if (+elem.dataset.x == minesArray[i].x && +elem.dataset.y == minesArray[i].y) {// [4] is array center
 						minesNearby++;
-						console.log(minesNearby);
-						if (currentTargetX == +elem.dataset.x && currentTargetY == +elem.dataset.y) {
-							alert("You lose.");
-						}		
-						//console.log("mine-x: " + elem.x + "mine-y: " + elem.y);
-						//console.log("target-x: " + +areaNear[5].dataset.x + "target-y: " + areaNear[5].dataset.y);
+						console.log(minesNearby);	
 					}
 				}
 			})
-			this.minesNear = minesNearby;
-			if (this.minesNear) {
+			if (minesNearby) {
 				let item = document.createElement("p");
 				item.classList.add("cellText");
-				item.innerHTML = this.minesNear;
+				//item.innerHTML = this.minesNear;
+				//debugger;
+				item.innerHTML = minesNearby;
 				currentTarget.appendChild(item);
 			}
 			else {
 				/* Opening empty cells goes here*/
-				
+				this.areaNearCurrentTarget.forEach(function (elem) {
+					elem.classList.remove("cellClass");
+					elem.classList.add("cellClassOpen");
+				})
 			}
 		}
 	}
@@ -106,6 +105,15 @@ class MineGame {
 		if (this.storage.correctFlags == this.storage.minesNumber) {
 		alert("That's all, you won!");
 		}
+	}
+	loseCheck () {
+		let currentTargetX = this.targetX;
+		let currentTargetY = this.targetY;
+		this.storage.minesPlacement.forEach(function (elem) {
+			if (elem.x == currentTargetX && elem.y == currentTargetY) {
+				alert("You lose.");
+			}
+		})
 	}
 	timer () {
 		/*count starting after the first click*/
@@ -137,9 +145,10 @@ menuBlock.addEventListener("click", function (event) {
 gameField.addEventListener("click", function (event) {
 	/*using event delegation on field elements to open*/
 	let target = event.target;
-	game.targetX = +target.dataset.x;
-	game.targetY = +target.dataset.y;
+	//game.targetX = +target.dataset.x;
+	//game.targetY = +target.dataset.y;
 	game.cellOpener(target);
+	game.loseCheck();
 	game.winCheck();
 })
 gameField.addEventListener("contextmenu", function (event) {
