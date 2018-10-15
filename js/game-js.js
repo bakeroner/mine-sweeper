@@ -76,7 +76,7 @@ class MineGame {
 			currentTarget.classList.add("cellClassOpen");
 			this.areaNearCurrentTarget.forEach(function (elem) {//avoid this!!!	
 				for (let i = 0; i<minesArray.length; i++) {
-					if (+elem.dataset.x == minesArray[i].x && +elem.dataset.y == minesArray[i].y) {// [4] is array center
+					if (elem && +elem.dataset.x == minesArray[i].x && +elem.dataset.y == minesArray[i].y) {// [4] is array center
 						minesNearby++;
 						console.log(minesNearby);	
 					}
@@ -85,16 +85,16 @@ class MineGame {
 			if (minesNearby) {
 				let item = document.createElement("p");
 				item.classList.add("cellText");
-				//item.innerHTML = this.minesNear;
-				//debugger;
 				item.innerHTML = minesNearby;
 				currentTarget.appendChild(item);
 			}
 			else {
 				/* Opening empty cells goes here*/
 				this.areaNearCurrentTarget.forEach(function (elem) {
+					if (elem) {
 					elem.classList.remove("cellClass");
 					elem.classList.add("cellClassOpen");
+					}
 				})
 			}
 		}
@@ -145,8 +145,6 @@ menuBlock.addEventListener("click", function (event) {
 gameField.addEventListener("click", function (event) {
 	/*using event delegation on field elements to open*/
 	let target = event.target;
-	//game.targetX = +target.dataset.x;
-	//game.targetY = +target.dataset.y;
 	game.cellOpener(target);
 	game.loseCheck();
 	game.winCheck();
