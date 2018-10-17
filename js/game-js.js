@@ -9,7 +9,7 @@ class MineGame {
 		/*variables*/
 		this.fieldHeight = fieldHeight;
 		this.fieldWidth = fieldWidth;
-		this.areaNearCurrentTarget = [];
+		//this.areaNearCurrentTarget = [];
 		this.minesNear = 0;
 		this.targetX = 0;
 		this.targetY = 0;
@@ -49,17 +49,41 @@ class MineGame {
 			}		
 		}
 	}
-	areaNearCurrentTargetCalculate () {//try use querySelector
+		areaNearCurrentTargetCalculate (cellX, cellY) {//try use querySelector
+			//debugger;
 		this.areaNearCurrentTarget = [];
-		for (let i = this.targetX-1; i<=this.targetX+1; i++) {//One day i use jQuery for it
-			for (let j = this.targetY-1; j<=this.targetY+1; j++) {
+		//let cellsNearby = [];
+		let minesArray = this.storage.minesPlacement;
+		this.minesNear = 0;
+		let minesNearby = this.minesNear;
+		for (let i = cellX-1; i<=cellX+1; i++) {//One day i'll use jQuery for it
+			for (let j = cellY-1; j<=cellY+1; j++) {
+				console.log("cellX: " + i + " cellY: " + j);
 				let currentCell = {x: i, y: j};
 				let elementNearby = document.querySelector('[data-x=' + '"' + i + '"' + '][data-y=' + '"' + j + '"' + ']');
 				//console.log(elementNearby);
-				this.areaNearCurrentTarget.push(elementNearby);
+				//if (elementNearby) {
+					this.areaNearCurrentTarget.push(elementNearby);
+				//}
+				//cellsNearby.push(elementNearby);
 			}
+		}	
+		this.areaNearCurrentTarget.forEach(function (elem) {
+		//cellsNearby.forEach(function (elem) {
+			for (let i = 0; i<minesArray.length; i++) {
+				if (elem && +elem.dataset.x == minesArray[i].x && +elem.dataset.y == minesArray[i].y) {// [4] is array center
+					minesNearby++;
+					console.log("mines from function: " + minesNearby);	
+				}
+			}
+		})
+		this.minesNear = minesNearby;
+		if (minesNearby) {
+			return false;
 		}
-
+		else {
+			return true;
+		}
 	}
 	cellOpener (currentTarget) {
 		/*open cell show mines number open empty cells*/
@@ -68,38 +92,72 @@ class MineGame {
 		{
 			this.targetX = +currentTarget.dataset.x;
 			this.targetY = +currentTarget.dataset.y;
-			this.areaNearCurrentTargetCalculate();
-			let areaNear = this.areaNearCurrentTarget;
-			let minesArray = this.storage.minesPlacement;
-			let minesNearby = this.minesNear;
 			currentTarget.classList.remove("cellClass");
 			currentTarget.classList.add("cellClassOpen");
-			this.areaNearCurrentTarget.forEach(function (elem) {//avoid this!!!	
-				for (let i = 0; i<minesArray.length; i++) {
-					if (elem && +elem.dataset.x == minesArray[i].x && +elem.dataset.y == minesArray[i].y) {// [4] is array center
-						minesNearby++;
-						console.log(minesNearby);	
-					}
-				}
-			})
-			if (minesNearby) {
+			if (!this.areaNearCurrentTargetCalculate(+currentTarget.dataset.x, +currentTarget.dataset.y)) {
 				let item = document.createElement("p");
 				item.classList.add("cellText");
-				item.innerHTML = minesNearby;
+				item.innerHTML = this.minesNear;
 				currentTarget.appendChild(item);
 			}
 			else {
 				/* Opening empty cells goes here*/
-				this.areaNearCurrentTarget.forEach(function (elem) {
-					if (elem) {
-					elem.classList.remove("cellClass");
-					elem.classList.add("cellClassOpen");
-					}
-				})
+				currentTarget.classList.add("blank");
+				this.emptyCellOpener();
 			}
 		}
 	}
-
+	emptyCellOpener () {
+		this.areaNearCurrentTarget.splice(4,1);
+		let cellNeighbours = this.areaNearCurrentTarget;
+		//console.log("cellNeighbours: " + cellNeighbours);
+		for (let i = 0; i<cellNeighbours.length; i++) {
+			//debugger;
+			if (cellNeighbours[i]) {
+				console.log("x: " + cellNeighbours[i].dataset.x + " y: " + cellNeighbours[i].dataset.y);
+				if (!this.areaNearCurrentTargetCalculate(+cellNeighbours[i].dataset.x, +cellNeighbours[i].dataset.y)) {
+					console.log("mines: " + this.minesNear);
+					cellNeighbours[i].classList.remove("cellClass");
+					cellNeighbours[i].classList.add("cellClassOpen");
+					let item = document.createElement("p");
+					item.classList.add("cellText");
+					item.innerHTML = this.minesNear;
+					cellNeighbours[i].appendChild(item);
+				}
+				else {
+					//debugger;
+					cellNeighbours[i].classList.remove("cellClass");
+					cellNeighbours[i].classList.add("cellClassOpen");
+					let arrayLength = cellNeighbours.length;
+					let anotherArrayIHaveNoIdeaWhatToDo = [];
+					this.areaNearCurrentTarget.forEach(function (elem) {
+						if (elem) {
+							for (let i = 0; i<arrayLength; i++) {
+								if (cellNeighbours[i]) {
+									if (elem.dataset.x == cellNeighbours[i].dataset.x && elem.dataset.y == cellNeighbours[i].dataset.y) {
+										console.log("areaNear-x: " + elem.dataset.x + " areaNear-y: " + elem.dataset.y);
+										console.log("x: " + cellNeighbours[i].dataset.x + " y: " + cellNeighbours[i].dataset.y);
+										//anotherArrayIHaveNoIdeaWhatToDo.push(cellNeighbours[i]);
+										//if (this.areaNearCurrentTarget) {
+										//	cellNeighbours.concat(this.areaNearCurrentTarget);	
+										//}				
+									}
+								}
+							}
+						}
+					})
+					/*cellNeighbours.forEach(function (elem) {
+						for (let i = 0; i<arrayLength; i++) {
+							if (anotherArrayIHaveNoIdeaWhatToDo[i].dataset.x == elem.dataset.x &&anotherArrayIHaveNoIdeaWhatToDo[i].dataset.y == elem.dataset.y) {
+								cellNeighbours.splice(i, 1);
+							}
+						}
+					})
+					cellNeighbours.concat(this.areaNearCurrentTarget);*/
+				}
+			}
+		}
+	}
 	winCheck () {
 		/*checking end of the game showing Congratulation Menu*/
 		if (this.storage.correctFlags == this.storage.minesNumber) {
