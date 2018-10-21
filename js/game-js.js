@@ -35,45 +35,60 @@ class MineGame {
 				item.setAttribute("data-x", j);
 				item.setAttribute("data-y", i);
 				gameField.appendChild(item);
-
-				randomNumber = Math.floor((Math.random() * 10) + 1);/*!!!!Fix this*/
+/*				randomNumber = Math.floor((Math.random() * 10) + 1);
 				if (randomNumber == 10 && minesCounter>0) {
 					let currentPosition = {x: j, y: i};
 					let mineIco = document.createElement("img");
 					mineIco.setAttribute("src", "images/bomb.png");
 					mineIco.classList.add("bombImage");
+					//mineIco.classList.add("hideElement"); !!!do it later
 					item.appendChild(mineIco);
 					minesCounter--;
 					this.storage.minesPlacement.push(currentPosition);
+				}*/
+			}
+		}
+			while (minesCounter>0) {//mix it with top part in some way
+				for (let i = 0; i<this.fieldWidth; i++) {
+					for (let j = 0; j<this.fieldHeight; j++) {
+						randomNumber = Math.floor((Math.random() * 10) + 1);
+						if (randomNumber == 10 && minesCounter>0) {
+							let item = document.querySelector('[data-x=' + '"' + i + '"' + '][data-y=' + '"' + j + '"' + ']');
+							let currentPosition = {x: j, y: i};
+							let mineIco = document.createElement("img");
+							mineIco.setAttribute("src", "images/bomb.png");
+							mineIco.classList.add("bombImage");
+							//mineIco.classList.add("hideElement"); !!!do it later
+							if (!item.firstChild) {
+							item.appendChild(mineIco);
+							minesCounter--;
+							this.storage.minesPlacement.push(currentPosition);
+							}
+						}
 				}
 			}		
 		}
 	}
+
 		areaNearCurrentTargetCalculate (cellX, cellY) {//try use querySelector
-			//debugger;
 		this.areaNearCurrentTarget = [];
-		//let cellsNearby = [];
 		let minesArray = this.storage.minesPlacement;
 		this.minesNear = 0;
 		let minesNearby = this.minesNear;
 		for (let i = cellX-1; i<=cellX+1; i++) {//One day i'll use jQuery for it
 			for (let j = cellY-1; j<=cellY+1; j++) {
-				console.log("cellX: " + i + " cellY: " + j);
+				//console.log("cellX: " + i + " cellY: " + j);
 				let currentCell = {x: i, y: j};
 				let elementNearby = document.querySelector('[data-x=' + '"' + i + '"' + '][data-y=' + '"' + j + '"' + ']');
 				//console.log(elementNearby);
-				//if (elementNearby) {
 					this.areaNearCurrentTarget.push(elementNearby);
-				//}
-				//cellsNearby.push(elementNearby);
 			}
 		}	
 		this.areaNearCurrentTarget.forEach(function (elem) {
-		//cellsNearby.forEach(function (elem) {
 			for (let i = 0; i<minesArray.length; i++) {
 				if (elem && +elem.dataset.x == minesArray[i].x && +elem.dataset.y == minesArray[i].y) {// [4] is array center
 					minesNearby++;
-					console.log("mines from function: " + minesNearby);	
+					//console.log("mines from function: " + minesNearby);	
 				}
 			}
 		})
@@ -113,9 +128,9 @@ class MineGame {
 		//console.log("cellNeighbours: " + cellNeighbours);
 		for (let i = 0; i<cellNeighbours.length; i++) {
 			if (cellNeighbours[i]) {
-				console.log("x: " + cellNeighbours[i].dataset.x + " y: " + cellNeighbours[i].dataset.y);
+				//console.log("x: " + cellNeighbours[i].dataset.x + " y: " + cellNeighbours[i].dataset.y);
 				if (!this.areaNearCurrentTargetCalculate(+cellNeighbours[i].dataset.x, +cellNeighbours[i].dataset.y)) {
-					console.log("mines: " + this.minesNear);
+					//console.log("mines: " + this.minesNear);
 					cellNeighbours[i].classList.remove("cellClass");
 					cellNeighbours[i].classList.add("cellClassOpen");
 					let item = document.createElement("p");
@@ -136,8 +151,8 @@ class MineGame {
 								for (let i = 0; i<arrayLength; i++) {
 									if (cellNeighbours[i]) {
 										if (elem.dataset.x == cellNeighbours[i].dataset.x && elem.dataset.y == cellNeighbours[i].dataset.y) {
-											console.log("areaNear-x: " + elem.dataset.x + " areaNear-y: " + elem.dataset.y);
-											console.log("x: " + cellNeighbours[i].dataset.x + " y: " + cellNeighbours[i].dataset.y);
+											//console.log("areaNear-x: " + elem.dataset.x + " areaNear-y: " + elem.dataset.y);
+											//console.log("x: " + cellNeighbours[i].dataset.x + " y: " + cellNeighbours[i].dataset.y);
 											count++;		
 										}
 									}
@@ -199,7 +214,7 @@ gameField.addEventListener("click", function (event) {
 	let target = event.target;
 	game.cellOpener(target);
 	game.loseCheck();
-	game.winCheck();
+	game.winCheck();//check it
 })
 gameField.addEventListener("contextmenu", function (event) {
 	/*using event delegation on field elements to set flag*/
@@ -215,14 +230,25 @@ gameField.addEventListener("contextmenu", function (event) {
 			game.storage.minesPlacement.forEach(function (elem) {
 				if (elem.x == target.dataset.x && elem.y == target.dataset.y) {
 					game.storage.correctFlags++;
+					game.storage.flagsNumber--;
+					console.log(game.storage.flagsNumber);
 				}
 			})
 		}
 		else {
 			//remove flag
-			//game.storage.correctFlags--;
+			target.removeChild(target.firstChild);
+			target.classList.remove('flag');
+			game.storage.minesPlacement.forEach(function (elem) {
+				if (elem.x == target.dataset.x && elem.y == target.dataset.y) {
+					game.storage.correctFlags--;
+					game.storage.flagsNumber++;
+					console.log(game.storage.flagsNumber);
+				}
+			})
 		}
 	}
+	game.winCheck();//check it
 	console.log("Right click catch");
 	return false;
 })
