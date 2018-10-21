@@ -96,6 +96,11 @@ body {
 	width: 20px;
 	height: 20px;
 }
+.flagImage {
+	margin: 4px;/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
+	width: 20px;
+	height: 20px;
+}
 .beginnerField {
 	width: 306px;/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 	height: 306px;

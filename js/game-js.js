@@ -112,7 +112,6 @@ class MineGame {
 		let cellNeighbours = this.areaNearCurrentTarget;
 		//console.log("cellNeighbours: " + cellNeighbours);
 		for (let i = 0; i<cellNeighbours.length; i++) {
-			//debugger;
 			if (cellNeighbours[i]) {
 				console.log("x: " + cellNeighbours[i].dataset.x + " y: " + cellNeighbours[i].dataset.y);
 				if (!this.areaNearCurrentTargetCalculate(+cellNeighbours[i].dataset.x, +cellNeighbours[i].dataset.y)) {
@@ -124,36 +123,31 @@ class MineGame {
 					item.innerHTML = this.minesNear;
 					cellNeighbours[i].appendChild(item);
 				}
-				else {
-					//debugger;
-					cellNeighbours[i].classList.remove("cellClass");
-					cellNeighbours[i].classList.add("cellClassOpen");
-					let arrayLength = cellNeighbours.length;
-					let anotherArrayIHaveNoIdeaWhatToDo = [];
-					this.areaNearCurrentTarget.forEach(function (elem) {
-						if (elem) {
-							for (let i = 0; i<arrayLength; i++) {
-								if (cellNeighbours[i]) {
-									if (elem.dataset.x == cellNeighbours[i].dataset.x && elem.dataset.y == cellNeighbours[i].dataset.y) {
-										console.log("areaNear-x: " + elem.dataset.x + " areaNear-y: " + elem.dataset.y);
-										console.log("x: " + cellNeighbours[i].dataset.x + " y: " + cellNeighbours[i].dataset.y);
-										//anotherArrayIHaveNoIdeaWhatToDo.push(cellNeighbours[i]);
-										//if (this.areaNearCurrentTarget) {
-										//	cellNeighbours.concat(this.areaNearCurrentTarget);	
-										//}				
+				else if (this.areaNearCurrentTargetCalculate(+cellNeighbours[i].dataset.x, +cellNeighbours[i].dataset.y)) {
+					if (!cellNeighbours[i].classList.contains("blank")) {
+						cellNeighbours[i].classList.remove("cellClass");
+						cellNeighbours[i].classList.add("blank");
+						cellNeighbours[i].classList.add("cellClassOpen");
+						let arrayLength = cellNeighbours.length;
+						let cellsNearby = this.areaNearCurrentTarget;
+						this.areaNearCurrentTarget.forEach(function (elem) {
+							if (elem) {
+								let count = 0;
+								for (let i = 0; i<arrayLength; i++) {
+									if (cellNeighbours[i]) {
+										if (elem.dataset.x == cellNeighbours[i].dataset.x && elem.dataset.y == cellNeighbours[i].dataset.y) {
+											console.log("areaNear-x: " + elem.dataset.x + " areaNear-y: " + elem.dataset.y);
+											console.log("x: " + cellNeighbours[i].dataset.x + " y: " + cellNeighbours[i].dataset.y);
+											count++;		
+										}
 									}
 								}
+								if (!count) {
+									cellNeighbours.push(elem);
+								}
 							}
-						}
-					})
-					/*cellNeighbours.forEach(function (elem) {
-						for (let i = 0; i<arrayLength; i++) {
-							if (anotherArrayIHaveNoIdeaWhatToDo[i].dataset.x == elem.dataset.x &&anotherArrayIHaveNoIdeaWhatToDo[i].dataset.y == elem.dataset.y) {
-								cellNeighbours.splice(i, 1);
-							}
-						}
-					})
-					cellNeighbours.concat(this.areaNearCurrentTarget);*/
+						})
+					}
 				}
 			}
 		}
@@ -167,7 +161,7 @@ class MineGame {
 	loseCheck () {
 		let currentTargetX = this.targetX;
 		let currentTargetY = this.targetY;
-		this.storage.minesPlacement.forEach(function (elem) {
+		this.storage.minesPlacement.forEach(function (elem) {//add condition about open cells
 			if (elem.x == currentTargetX && elem.y == currentTargetY) {
 				alert("You lose.");
 			}
@@ -209,6 +203,26 @@ gameField.addEventListener("click", function (event) {
 })
 gameField.addEventListener("contextmenu", function (event) {
 	/*using event delegation on field elements to set flag*/
+	event.preventDefault();
 	let target = event.target;
+	if (target.classList.contains('cellClass')) {
+		if (!target.classList.contains('flag')) {
+			target.classList.add('flag');
+			let flagIco = document.createElement("img");
+			flagIco.setAttribute("src", "images/flag-icon.png");
+			flagIco.classList.add("flagImage");
+			target.appendChild(flagIco);
+			game.storage.minesPlacement.forEach(function (elem) {
+				if (elem.x == target.dataset.x && elem.y == target.dataset.y) {
+					game.storage.correctFlags++;
+				}
+			})
+		}
+		else {
+			//remove flag
+			//game.storage.correctFlags--;
+		}
+	}
 	console.log("Right click catch");
+	return false;
 })
