@@ -35,7 +35,7 @@ class MineGame {
 				item.setAttribute("data-x", j);
 				item.setAttribute("data-y", i);
 				gameField.appendChild(item);
-				randomNumber = Math.floor((Math.random() * 10) + 1);
+/*				randomNumber = Math.floor((Math.random() * 10) + 1);
 				if (randomNumber == 10 && minesCounter>0) {
 					let currentPosition = {x: j, y: i};
 					let mineIco = document.createElement("img");
@@ -45,21 +45,22 @@ class MineGame {
 					item.appendChild(mineIco);
 					minesCounter--;
 					this.storage.minesPlacement.push(currentPosition);
-				}
+				}*/
 			}
 		}
-/*			while (minesCounter>0) {//mix it with top part in some way
+			while (minesCounter>0) {//mix it with top part in some way
+				//debugger;
 				for (let i = 0; i<this.fieldWidth; i++) {
 					for (let j = 0; j<this.fieldHeight; j++) {
 						randomNumber = Math.floor((Math.random() * 10) + 1);
 						if (randomNumber == 10 && minesCounter>0) {
-							let item = document.querySelector('[data-x=' + '"' + i + '"' + '][data-y=' + '"' + j + '"' + ']');
+							let item = document.querySelector('[data-x=' + '"' + j + '"' + '][data-y=' + '"' + i + '"' + ']');
+							if (!item.firstChild) {
 							let currentPosition = {x: j, y: i};
 							let mineIco = document.createElement("img");
 							mineIco.setAttribute("src", "images/bomb.png");
 							mineIco.classList.add("bombImage");
 							//mineIco.classList.add("hideElement"); !!!do it later
-							if (!item.firstChild) {
 							item.appendChild(mineIco);
 							minesCounter--;
 							this.storage.minesPlacement.push(currentPosition);
@@ -67,7 +68,7 @@ class MineGame {
 						}
 				}
 			}		
-		}*/
+		}
 	}
 
 		areaNearCurrentTargetCalculate (cellX, cellY) {//try use querySelector
@@ -223,7 +224,7 @@ gameField.addEventListener("contextmenu", function (event) {
 	event.preventDefault();
 	let target = event.target;
 	if (target.classList.contains('cellClass')) {
-		if (!target.classList.contains('flag') && !target.classList.contains('flag')) {
+		if (!target.classList.contains('flag') && !target.classList.contains('flagImage')) {
 			target.classList.add('flag');
 			let flagIco = document.createElement("img");
 			flagIco.setAttribute("src", "images/flag-icon.png");
