@@ -58,7 +58,7 @@ class MineGame {
 							let mineIco = document.createElement("img");
 							mineIco.setAttribute("src", "images/bomb.png");
 							mineIco.classList.add("bombImage");
-							//mineIco.classList.add("hideElement"); !!!do it later
+							mineIco.classList.add("hideElement"); //!!!do it later
 							if (!item.firstChild) {
 							item.appendChild(mineIco);
 							minesCounter--;
@@ -169,7 +169,7 @@ class MineGame {
 	}
 	winCheck () {
 		/*checking end of the game showing Congratulation Menu*/
-		if (this.storage.correctFlags == this.storage.minesNumber) {
+		if (this.storage.correctFlags == this.storage.minesNumber && this.storage.flagsNumber == 0) {
 		alert("That's all, you won!");
 		}
 	}
@@ -230,10 +230,10 @@ gameField.addEventListener("contextmenu", function (event) {
 			game.storage.minesPlacement.forEach(function (elem) {
 				if (elem.x == target.dataset.x && elem.y == target.dataset.y) {
 					game.storage.correctFlags++;
-					game.storage.flagsNumber--;
-					console.log(game.storage.flagsNumber);
 				}
 			})
+			game.storage.flagsNumber--;
+			console.log(game.storage.flagsNumber);
 		}
 		else {
 			//remove flag
@@ -242,10 +242,10 @@ gameField.addEventListener("contextmenu", function (event) {
 			game.storage.minesPlacement.forEach(function (elem) {
 				if (elem.x == target.dataset.x && elem.y == target.dataset.y) {
 					game.storage.correctFlags--;
-					game.storage.flagsNumber++;
-					console.log(game.storage.flagsNumber);
 				}
 			})
+			game.storage.flagsNumber++;
+			console.log(game.storage.flagsNumber);
 		}
 	}
 	game.winCheck();//check it
