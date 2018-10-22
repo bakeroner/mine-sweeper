@@ -169,6 +169,7 @@ class MineGame {
 				document.querySelectorAll('.bombImage').forEach (function (elem) {
 					elem.classList.toggle('hideElement');
 				})
+				clearInterval(setTime);
 				alert("You lose.");
 			}
 		})
