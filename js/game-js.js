@@ -161,6 +161,7 @@ class MineGame {
 	winOrDie (currentTargetX, currentTargetY, isItLeft) {
 		/*checking end of the game showing Congratulation Menu*/
 		if (this.storage.correctFlags == this.storage.minesNumber && this.storage.flagsNumber == 0 && !document.querySelector('.cellClass:not(.flag)')) {
+			this.storage.timer = +timerIndicator.children[0].textContent;//!!!bad
 			clearInterval(setTime);
 			alert("That's all, you won!" + " Your time: " + this.storage.timer);
 		}
@@ -179,10 +180,8 @@ class MineGame {
 			setTime = setInterval(function () { 
  				currentTime++;
 				timerIndicator.children[0].innerHTML = currentTime;
-				//check = currentTime;
 			}, 1000);		
 		}
-		//console.log(check);
 		this.storage.timer = setTime;
 	}
 }
