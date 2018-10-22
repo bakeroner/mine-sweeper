@@ -3,6 +3,7 @@ body {
 	height: 100%;
 	margin: 0;
 	position: relative;
+	overflow-x: hidden;
 }
 .menu {
 	width: 100%;
@@ -31,6 +32,10 @@ body {
 	width: 100px;
 	height: 40px;
 	margin-bottom: 1rem;
+	border: 2px solid #000;
+	border-radius: 5px;
+	background-color: #fff;
+
 }
 .mine-sweeper {
 	width: 100%;
@@ -38,7 +43,8 @@ body {
 	background-color: #7a7c7f;
 }
 .mine-sweeper__game {
-	margin: 0 auto;
+	/*margin: 0 auto;*/
+	margin: 0;
 	width: 1024px;
 	height: 600px;/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 }
@@ -51,25 +57,52 @@ body {
 }
 .game__stats {
 	justify-content: space-between;
+	margin-right: auto;
+	margin-left: auto;
 }
 /*------------------Testing style attributes---------------------*/
 .stats__mines {
 	width: 80px;
 	height: 40px;
 	margin: 5px;
+	margin-right: 0px;
+	margin-left: 0px;
 	background-color: #fff;
+	text-align: center;
+	border: 2px solid #000;
+	border-radius: 5px;
+}
+.stats__mines > p {
+	margin: 0;
+	margin-top: 10%;
+	margin-bottom: 10%;
+	font-size: 20px;
+	
 }
 .stats__face {
 	width: 40px;
 	height: 40px;
 	margin: 5px;
 	background-color: #fff;
+	border: 2px solid #000;
+	border-radius: 5px;
 }
 .stats__timer {
 	width: 80px;
 	height: 40px;
 	margin: 5px;
+	margin-right: 0px;
+	margin-left: 0px;
 	background-color: #fff;
+	text-align: center;
+	border: 2px solid #000;
+	border-radius: 5px;
+}
+.stats__timer > p {
+	margin: 0;
+	margin-top: 10%;
+	margin-bottom: 10%;
+	font-size: 20px;
 }
 /*------------------JS style attributes---------------------*/
 .hideElement {
@@ -105,13 +138,22 @@ body {
 	width: 306px;/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 	height: 306px;
 }
+.game__statsBeginner {
+	width: 306px;
+}
 .amateurField {
 	width: 544px;/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 	height: 544px;
 }
+.game__statsAmateur {
+	width: 544px;
+}
 .expertField {
 	width: 1020px;/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 	height: 544px;
+}
+.game__statsExpert {
+	width: 1020px;
 }
 .cellText {
 	color: blue;

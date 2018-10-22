@@ -3,6 +3,7 @@ const gameWindow = document.getElementById("gameWindow");
 const menuBlock = document.getElementById("menuBlock");
 const minesIndicator = document.querySelector(".stats__mines");
 const timerIndicator = document.querySelector(".stats__timer");
+const gameStats = document.querySelector(".game__stats");
 let game;//variable for a new game class object
 let setTime;//timer variable
 
@@ -69,7 +70,7 @@ class MineGame {
 		let minesArray = this.storage.minesPlacement;
 		this.minesNear = 0;
 		let minesNearby = this.minesNear;
-		for (let i = cellX-1; i<=cellX+1; i++) {//One day i'll use jQuery for it
+		for (let i = cellX-1; i<=cellX+1; i++) {
 			for (let j = cellY-1; j<=cellY+1; j++) {
 				let currentCell = {x: i, y: j};
 				let elementNearby = document.querySelector('[data-x=' + '"' + i + '"' + '][data-y=' + '"' + j + '"' + ']');
@@ -160,8 +161,6 @@ class MineGame {
 	winOrDie (currentTargetX, currentTargetY, isItLeft) {
 		/*checking end of the game showing Congratulation Menu*/
 		if (this.storage.correctFlags == this.storage.minesNumber && this.storage.flagsNumber == 0 && !document.querySelector('.cellClass:not(.flag)')) {
-			//console.log(timerIndicator.children[0].innerHTMl);
-			//this.storage.timer = setTime;
 			clearInterval(setTime);
 			alert("That's all, you won!" + " Your time: " + this.storage.timer);
 		}
@@ -175,11 +174,6 @@ class MineGame {
 		})
 	}
 	timer () {
-		
-		/*function callback(value) {
-			this.storage.timer = value;
-		};*/
-		//debugger;
 		if (!this.storage.timer) {
 			let currentTime = 0;
 			setTime = setInterval(function () { 
@@ -199,14 +193,17 @@ menuBlock.addEventListener("click", function (event) {
 			case document.querySelector('#beginnerButton'):
 			game = new MineGame(9,9,10);
 			gameField.classList.toggle("beginnerField");
+			gameStats.classList.toggle('game__statsBeginner');
 			break;
 			case document.querySelector('#amateurButton'):
 			game = new MineGame(16,16,40);
 			gameField.classList.toggle("amateurField");
+			gameStats.classList.toggle('game__statsAmateur');
 			break;
 			case document.querySelector('#expertButton'):
 			game = new MineGame(30,16,99);
 			gameField.classList.toggle("expertField");
+			gameStats.classList.toggle('game__statsExpert');
 			break;
 			default: break;
 		}
