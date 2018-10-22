@@ -4,6 +4,7 @@ const menuBlock = document.getElementById("menuBlock");
 const minesIndicator = document.querySelector(".stats__mines");
 const timerIndicator = document.querySelector(".stats__timer");
 let game;//variable for a new game class object
+let setTime;//timer variable
 
 class MineGame {
 
@@ -96,6 +97,8 @@ class MineGame {
 		{
 			currentTarget.classList.remove("cellClass");
 			currentTarget.classList.add("cellClassOpen");
+			/*set timer*/
+				this.timer();
 			if (!this.neighboursCheck(+currentTarget.dataset.x, +currentTarget.dataset.y)) {
 				let item = document.createElement("p");
 				item.classList.add("cellText");
@@ -157,6 +160,9 @@ class MineGame {
 	winOrDie (currentTargetX, currentTargetY, isItLeft) {
 		/*checking end of the game showing Congratulation Menu*/
 		if (this.storage.correctFlags == this.storage.minesNumber && this.storage.flagsNumber == 0 && !document.querySelector('.cellClass:not(.flag)')) {
+			//console.log(timerIndicator.children[0].innerHTMl);
+			//this.storage.timer = setTime;
+			clearInterval(setTime);
 			alert("That's all, you won!" + " Your time: " + this.storage.timer);
 		}
 		this.storage.minesPlacement.forEach(function (elem) {
@@ -169,17 +175,26 @@ class MineGame {
 		})
 	}
 	timer () {
-		/*count starting after the first click*/
-		this.storage.timer++;
-		timerIndicator.children[0].innerHTML = this.storage.timer;
+		
+		/*function callback(value) {
+			this.storage.timer = value;
+		};*/
+		//debugger;
+		if (!this.storage.timer) {
+			let currentTime = 0;
+			setTime = setInterval(function () { 
+ 				currentTime++;
+				timerIndicator.children[0].innerHTML = currentTime;
+				//check = currentTime;
+			}, 1000);		
+		}
+		//console.log(check);
+		this.storage.timer = setTime;
 	}
 }
-/*if (document.querySelector('.cellClassOpen')) { !!!don't work
-setInterval(game.timer(), 1000);
-}*/
 menuBlock.addEventListener("click", function (event) {
 	let target = event.target;
-	//while () {//!!!looking for a great idea
+	if (target.classList.contains('choose-difficulty__button')) {
 		switch (target) {
 			case document.querySelector('#beginnerButton'):
 			game = new MineGame(9,9,10);
@@ -195,10 +210,11 @@ menuBlock.addEventListener("click", function (event) {
 			break;
 			default: break;
 		}
-	//}
-	menuBlock.classList.toggle("hideElement");
-	gameWindow.classList.toggle("hideElement");
-	game.fieldBuilder();
+	
+		menuBlock.classList.toggle("hideElement");
+		gameWindow.classList.toggle("hideElement");
+		game.fieldBuilder();
+	}
 })
 gameField.addEventListener("click", function (event) {
 	/*using event delegation on field elements to open*/
