@@ -116,18 +116,17 @@ class MineGame {
 		emptyCellOpener () {//!!!check and rewrite
 		this.areaNearCurrentTarget.splice(4,1);
 		let cellNeighbours = this.areaNearCurrentTarget;
-		//console.log("cellNeighbours: " + cellNeighbours);
 		for (let i = 0; i<cellNeighbours.length; i++) {
 			if (cellNeighbours[i]) {
-				//console.log("x: " + cellNeighbours[i].dataset.x + " y: " + cellNeighbours[i].dataset.y);
 				if (!this.neighboursCheck(+cellNeighbours[i].dataset.x, +cellNeighbours[i].dataset.y)) {
-					//console.log("mines: " + this.minesNear);
 					cellNeighbours[i].classList.remove("cellClass");
 					cellNeighbours[i].classList.add("cellClassOpen");
 					let item = document.createElement("p");
 					item.classList.add("cellText");
 					item.innerHTML = this.minesNear;
+					if (!cellNeighbours[i].children[0]) {
 						cellNeighbours[i].appendChild(item);
+					}
 				}
 				else if (this.neighboursCheck(+cellNeighbours[i].dataset.x, +cellNeighbours[i].dataset.y)) {
 					if (!cellNeighbours[i].classList.contains("blank")) {
@@ -142,8 +141,6 @@ class MineGame {
 								for (let i = 0; i<arrayLength; i++) {
 									if (cellNeighbours[i]) {
 										if (elem.dataset.x == cellNeighbours[i].dataset.x && elem.dataset.y == cellNeighbours[i].dataset.y) {
-											//console.log("areaNear-x: " + elem.dataset.x + " areaNear-y: " + elem.dataset.y);
-											//console.log("x: " + cellNeighbours[i].dataset.x + " y: " + cellNeighbours[i].dataset.y);
 											count++;		
 										}
 									}
@@ -206,7 +203,6 @@ menuBlock.addEventListener("click", function (event) {
 			break;
 			default: break;
 		}
-	
 		menuBlock.classList.toggle("hideElement");
 		gameWindow.classList.toggle("hideElement");
 		game.fieldBuilder();
