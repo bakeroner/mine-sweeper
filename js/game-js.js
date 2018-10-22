@@ -104,7 +104,9 @@ class MineGame {
 				let item = document.createElement("p");
 				item.classList.add("cellText");
 				item.innerHTML = this.minesNear;
-				currentTarget.appendChild(item);
+				if (!currentTarget.children[0]) {
+					currentTarget.appendChild(item);
+				}
 			}
 			else {
 				/* Opening empty cells goes here*/
