@@ -188,24 +188,6 @@ class MineGame {
 		this.storage.timer++;
 		timerIndicator.children[0].innerHTML = this.storage.timer;
 	}
-/*	flagCheck (currentTarget) {
-		if (currentTarget.classList.contains('cellClass')) {
-			if (currentTarget.classList.contains('flag')) {
-
-			}
-			else {
-
-			}
-			
-		}
-		else if (currentTarget.classList.contains('flagImage')) {
-
-		}
-		function classCheck () {
-
-		}
-	}*/
-
 }
 /*if (document.querySelector('.cellClassOpen')) { !!!don't work
 setInterval(game.timer(), 1000);
@@ -259,24 +241,27 @@ gameField.addEventListener("contextmenu", function (event) { //!!!rewrite all
 			game.storage.flagsNumber--;
 			minesIndicator.children[0].innerHTML = game.storage.flagsNumber;
 			//console.log(game.storage.flagsNumber);
-			game.winCheck();//!!!remove it and add open cells check
+			game.winCheck();
 		}
 		else {
 			//remove flag
+			flagRemove(target);
 			target.removeChild(target.firstChild);
-			target.classList.remove('flag');
-			game.storage.minesPlacement.forEach(function (elem) {
-				if (elem.x == target.dataset.x && elem.y == target.dataset.y) {
-					game.storage.correctFlags--;
-				}
-			})
-			game.storage.flagsNumber++;
-			minesIndicator.children[0].innerHTML = game.storage.flagsNumber;
-			//console.log(game.storage.flagsNumber);
 		}
 	}
 	else if (target.classList.contains('flagImage')) {
-
+		flagRemove(target.parentNode);
+		target.parentNode.removeChild(target);
+	}
+	function flagRemove (currentTarget) {
+		currentTarget.classList.remove('flag');
+		game.storage.minesPlacement.forEach(function (elem) {
+			if (elem.x == currentTarget.dataset.x && elem.y == currentTarget.dataset.y) {
+				game.storage.correctFlags--;
+			}
+		})
+		game.storage.flagsNumber++;
+		minesIndicator.children[0].innerHTML = game.storage.flagsNumber;		
 	}
 	console.log("Right click catch");
 	return false;
