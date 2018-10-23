@@ -55,8 +55,7 @@ class MineGame {
 							this.storage.minesPlacement.push(currentPosition);
 							let mineIco = document.createElement("img");
 							mineIco.setAttribute("src", "images/bomb.png");
-							mineIco.classList.add("bombImage");
-							mineIco.classList.add("hideElement"); 
+							mineIco.classList.add("bombImage", "hideElement");
 							item.appendChild(mineIco);
 							minesCounter--;
 						}
@@ -133,8 +132,7 @@ class MineGame {
 				else if (this.neighboursCheck(+cellNeighbours[i].dataset.x, +cellNeighbours[i].dataset.y)) {
 					if (!cellNeighbours[i].classList.contains("blank")) {
 						cellNeighbours[i].classList.remove("cellClass");
-						cellNeighbours[i].classList.add("blank");
-						cellNeighbours[i].classList.add("cellClassOpen");
+						cellNeighbours[i].classList.add("blank", "cellClassOpen");
 						let arrayLength = cellNeighbours.length;
 						let cellsNearby = this.areaNearCurrentTarget;
 						this.areaNearCurrentTarget.forEach(function (elem) {
