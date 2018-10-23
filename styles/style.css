@@ -131,6 +131,14 @@ body {
 	border: 2px solid #000;
 	margin:1px;	
 }
+.cellClassOpenMine {
+	height: 28px;
+	width: 28px;
+	border-radius: 2px;
+	background-color: #d01616;
+	border: 2px solid #000;
+	margin:1px;	
+}
 .bombImage {
 	margin: 4px;/*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
 	width: 20px;

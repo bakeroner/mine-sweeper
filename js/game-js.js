@@ -95,8 +95,7 @@ class MineGame {
 		/*open first cell show mines number open empty cells*/
 		if (currentTarget.classList.contains("cellClass"))
 		{
-			currentTarget.classList.remove("cellClass");
-			currentTarget.classList.add("cellClassOpen");
+			currentTarget.classList.replace("cellClass", "cellClassOpen");
 			/*set timer*/
 				this.timer();
 			if (!this.neighboursCheck(+currentTarget.dataset.x, +currentTarget.dataset.y)) {
@@ -120,8 +119,7 @@ class MineGame {
 		for (let i = 0; i<cellNeighbours.length; i++) {
 			if (cellNeighbours[i]) {
 				if (!this.neighboursCheck(+cellNeighbours[i].dataset.x, +cellNeighbours[i].dataset.y)) {
-					cellNeighbours[i].classList.remove("cellClass");
-					cellNeighbours[i].classList.add("cellClassOpen");
+					cellNeighbours[i].classList.replace("cellClass", "cellClassOpen");
 					let item = document.createElement("p");
 					item.classList.add("cellText");
 					item.innerHTML = this.minesNear;
@@ -165,11 +163,16 @@ class MineGame {
 		this.storage.minesPlacement.forEach(function (elem) {
 			if (elem.x == currentTargetX && elem.y == currentTargetY && isItLeft) {
 				document.querySelectorAll('.bombImage').forEach (function (elem) {
-					elem.classList.toggle('hideElement');
+					if (elem.parentNode.classList.contains('cellClassOpen')) {
+						elem.parentNode.classList.replace('cellClassOpen', 'cellClassOpenMine');
+					}
+					if (!elem.parentNode.classList.contains('flag')) {
+						elem.classList.toggle('hideElement');
+					}
 				})
 				clearInterval(setTime);
 				alert("You lose.");
-				gameField.removeEventListener('click', function (event) {});
+
 			}
 		})
 	}
