@@ -169,6 +169,7 @@ class MineGame {
 				})
 				clearInterval(setTime);
 				alert("You lose.");
+				gameField.removeEventListener('click', function (event) {});
 			}
 		})
 	}
