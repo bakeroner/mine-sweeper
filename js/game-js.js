@@ -17,6 +17,7 @@ class MineGame {
 		this.fieldWidth = fieldWidth;
 		this.areaNearCurrentTarget = [];
 		this.minesNear = 0;
+		this.gameEnd = false;
 		this.storage = {
 		minesNumber: minesNumber,
 		flagsNumber: minesNumber,
@@ -157,13 +158,13 @@ class MineGame {
 	}
 	winOrDie (currentTargetX, currentTargetY, isItLeft) {
 		/*checking end of the game showing Congratulation Menu*/
+		let end;
 		if (this.storage.correctFlags == this.storage.minesNumber && this.storage.flagsNumber == 0 && !document.querySelector('.cellClass:not(.flag)')) {
+			end = true;
 			this.storage.timer = +timerIndicator.children[0].textContent;//!!!bad
 			clearInterval(setTime);
-			//alert("That's all, you won!");
 			gameFooter.classList.toggle('hideElement');
 			gameFooter.children[0].innerHTML = "Poseur!" + '<br>' + "Your score: " + '<br>' + this.storage.timer;
-
 		}
 		this.storage.minesPlacement.forEach(function (elem) {
 			if (elem.x == currentTargetX && elem.y == currentTargetY && isItLeft) {
@@ -176,22 +177,25 @@ class MineGame {
 					}
 				})
 				clearInterval(setTime);
-				//alert("You lose.");
 				gameFooter.classList.toggle('hideElement');
 				gameFooter.children[0].innerHTML = "Not Your Best Day?" + '<br>' + "Hah!";
+				end = true;
 			}
 		})
-
+		return this.gameEnd = end;
 	}
 	timer () {
+		//debugger;
+		
 		if (!this.storage.timer) {
 			let currentTime = 0;
 			setTime = setInterval(function () { 
  				currentTime++;
 				timerIndicator.children[0].innerHTML = currentTime;
-			}, 1000);		
+			}, 1000);	
 		}
 		this.storage.timer = setTime;
+		
 	}
 }
 menuBlock.addEventListener("click", function (event) {
@@ -223,14 +227,16 @@ menuBlock.addEventListener("click", function (event) {
 gameField.addEventListener("click", function (event) {
 	/*using event delegation on field elements to open*/
 	let target = event.target;
-	game.cellOpener(target);
-	game.winOrDie(+target.dataset.x, +target.dataset.y, true);
+	if (!game.gameEnd) {
+		game.cellOpener(target);
+		game.winOrDie(+target.dataset.x, +target.dataset.y, true);
+	}
 })
 gameField.addEventListener("contextmenu", function (event) { //!!!rewrite all
 	/*using event delegation on field elements to set flag*/
 	event.preventDefault();
 	let target = event.target;
-	if (target.classList.contains('cellClass')) {
+	if (target.classList.contains('cellClass') && !game.gameEnd) {
 		if (!target.classList.contains('flag')) {
 			target.classList.add('flag');
 			let flagIco = document.createElement("img");
@@ -252,7 +258,7 @@ gameField.addEventListener("contextmenu", function (event) { //!!!rewrite all
 			target.removeChild(target.firstChild);
 		}
 	}
-	else if (target.classList.contains('flagImage')) {
+	else if (target.classList.contains('flagImage') && !game.gameEnd) {
 		flagRemove(target.parentNode);
 		target.parentNode.removeChild(target);
 	}
