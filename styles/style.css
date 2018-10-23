@@ -21,7 +21,8 @@ body {
 }
 .choose-difficulty,
 .menu__choose-difficulty,
-.mine-sweeper {
+.mine-sweeper,
+.game__footer {
 	display: flex;
 	flex-direction: column;
 }
@@ -67,7 +68,6 @@ body {
 	margin-right: auto;
 	margin-left: auto;
 }
-/*------------------Testing style attributes---------------------*/
 .stats__mines {
 	width: 80px;
 	height: 40px;
@@ -111,6 +111,21 @@ body {
 	margin-bottom: 10%;
 	font-size: 20px;
 }
+.footer__button {
+	width: 100px;
+	height: 40px;
+	margin: 0 auto;
+	margin-top: 1rem;
+	border: 2px solid #000;
+	border-radius: 5px;
+	background-color: #fff;
+}
+.game__footer {
+	text-align: center;
+}
+/*.game__footer > p {
+	
+}*/
 /*------------------JS style attributes---------------------*/
 .hideElement {
 	display: none;
@@ -177,3 +192,4 @@ body {
 	height: 100%;
 	text-align: center;
 }
+

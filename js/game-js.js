@@ -4,6 +4,8 @@ const menuBlock = document.getElementById("menuBlock");
 const minesIndicator = document.querySelector(".stats__mines");
 const timerIndicator = document.querySelector(".stats__timer");
 const gameStats = document.querySelector(".game__stats");
+const gameFooter = document.querySelector(".game__footer");
+const restartButton = document.querySelector(".footer__button");
 let game;//variable for a new game class object
 let setTime;//timer variable
 
@@ -158,7 +160,10 @@ class MineGame {
 		if (this.storage.correctFlags == this.storage.minesNumber && this.storage.flagsNumber == 0 && !document.querySelector('.cellClass:not(.flag)')) {
 			this.storage.timer = +timerIndicator.children[0].textContent;//!!!bad
 			clearInterval(setTime);
-			alert("That's all, you won!" + " Your time: " + this.storage.timer);
+			//alert("That's all, you won!");
+			gameFooter.classList.toggle('hideElement');
+			gameFooter.children[0].innerHTML = "Poseur!" + '<br>' + "Your score: " + '<br>' + this.storage.timer;
+
 		}
 		this.storage.minesPlacement.forEach(function (elem) {
 			if (elem.x == currentTargetX && elem.y == currentTargetY && isItLeft) {
@@ -171,10 +176,12 @@ class MineGame {
 					}
 				})
 				clearInterval(setTime);
-				alert("You lose.");
-
+				//alert("You lose.");
+				gameFooter.classList.toggle('hideElement');
+				gameFooter.children[0].innerHTML = "Not Your Best Day?" + '<br>' + "Hah!";
 			}
 		})
+
 	}
 	timer () {
 		if (!this.storage.timer) {
@@ -260,4 +267,30 @@ gameField.addEventListener("contextmenu", function (event) { //!!!rewrite all
 		minesIndicator.children[0].innerHTML = game.storage.flagsNumber;		
 	}
 	return false;
+})
+restartButton.addEventListener('click', function (event) {
+	menuBlock.classList.toggle("hideElement");
+	gameWindow.classList.toggle("hideElement");
+	gameFooter.classList.toggle("hideElement");
+	//game Destroyer
+	switch (gameField) {
+		case document.querySelector('.beginnerField'):
+		gameField.classList.toggle("beginnerField");
+		gameStats.classList.toggle('game__statsBeginner');
+		break;
+		case document.querySelector('.amateurField'):
+		gameField.classList.toggle("amateurField");
+		gameStats.classList.toggle('game__statsAmateur');
+		break;
+		case document.querySelector('.expertField'):
+		gameField.classList.toggle("expertField");
+		gameStats.classList.toggle('game__statsExpert');
+		break;
+		default: break;
+	}
+	gameField.innerHTML = '';
+	timerIndicator.innerHTML = '';
+	minesIndicator.innerHTML = '';
+	game = 'Poof!!';
+	
 })
