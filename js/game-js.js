@@ -96,9 +96,10 @@ class MineGame {
 		/*open first cell show mines number open empty cells*/
 		if (currentTarget.classList.contains("cellClass"))
 		{
-			currentTarget.classList.replace("cellClass", "cellClassOpen");
 			/*set timer*/
-				this.timer();
+			this.timer();
+
+			currentTarget.classList.replace("cellClass", "cellClassOpen");
 			if (!this.neighboursCheck(+currentTarget.dataset.x, +currentTarget.dataset.y)) {
 				let item = document.createElement("p");
 				item.classList.add("cellText");
@@ -155,10 +156,10 @@ class MineGame {
 	winOrDie (currentTargetX, currentTargetY, isItLeft) {
 		/*checking end of the game showing Congratulation Menu*/
 		if (this.storage.correctFlags == this.storage.minesNumber && this.storage.flagsNumber == 0 && !document.querySelector('.cellClass:not(.flag)')) {
+			this.gameEnd = true;
 			clearInterval(setTime);
 			gameFooter.classList.toggle('hideElement');
 			gameFooter.children[0].innerHTML = `Poseur!<br>Your score:<br>${this.storage.timer}`;
-			this.gameEnd = true;
 		}
 		this.storage.minesPlacement.forEach((elem) => {
 			if (elem.x == currentTargetX && elem.y == currentTargetY && isItLeft) {
@@ -179,10 +180,19 @@ class MineGame {
 	}
 	timer () {
 		if (!this.storage.timer) {
-			setTime = setInterval(() => { 
- 				this.storage.timer++;
-				timerIndicator.children[0].innerHTML = this.storage.timer;
-			}, 1000);	
+			let promise = new Promise((resolve, reject) => {
+					if (!this.gameEnd) {
+						resolve('tickTack');
+					}
+			})
+			promise
+				.then(
+					tickTack => {
+						setTime = setInterval(() => {
+							this.storage.timer++;
+							timerIndicator.children[0].innerHTML = this.storage.timer;
+						}, 1000);
+					})
 		}		
 	}
 }
