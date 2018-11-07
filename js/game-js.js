@@ -181,9 +181,7 @@ class MineGame {
 	timer () {
 		if (!this.storage.timer) {
 			let promise = new Promise((resolve, reject) => {
-					if (!this.gameEnd) {
-						resolve('tickTack');
-					}
+				resolve('tickTack');
 			})
 			promise
 				.then(
