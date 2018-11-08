@@ -97,8 +97,11 @@ class MineGame {
 		if (currentTarget.classList.contains("cellClass"))
 		{
 			/*set timer*/
-			this.timer();
-
+			if (!this.storage.timer) {
+				this.storage.timer++;
+				timerIndicator.children[0].innerHTML = this.storage.timer;
+				this.timer();
+			}
 			currentTarget.classList.replace("cellClass", "cellClassOpen");
 			if (!this.neighboursCheck(+currentTarget.dataset.x, +currentTarget.dataset.y)) {
 				let item = document.createElement("p");
@@ -179,7 +182,6 @@ class MineGame {
 		})
 	}
 	timer () {
-		if (!this.storage.timer) {
 			let promise = new Promise((resolve, reject) => {
 				resolve('tickTack');
 			})
@@ -190,8 +192,7 @@ class MineGame {
 							this.storage.timer++;
 							timerIndicator.children[0].innerHTML = this.storage.timer;
 						}, 1000);
-					})
-		}		
+					})	
 	}
 }
 menuBlock.addEventListener("click", (event) => {
