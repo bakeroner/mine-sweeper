@@ -46,6 +46,9 @@ class MineGame {
 				gameField.appendChild(item);
 			}
 		}
+
+	}
+	minesSetter () {
 		let minesCounter = this.storage.minesNumber;
 		while (minesCounter>0) {
 			for (let i = 0; i<this.fieldWidth; i++) {
@@ -67,7 +70,7 @@ class MineGame {
 			}		
 		}
 	}
-		neighboursCheck (cellX, cellY) {
+	neighboursCheck (cellX, cellY) {
 		this.areaNearCurrentTarget = [];
 		let minesArray = this.storage.minesPlacement;
 		this.minesNear = 0;
@@ -219,6 +222,7 @@ menuBlock.addEventListener("click", (event) => {
 		menuBlock.classList.toggle("hideElement");
 		gameWindow.classList.toggle("hideElement");
 		game.fieldBuilder();
+		game.minesSetter();
 	}
 })
 gameField.addEventListener("click", (event) => {
