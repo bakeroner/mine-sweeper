@@ -57,13 +57,21 @@ class MineGame {
 					if (randomNumber == 10 && minesCounter>0) {
 						let item = document.querySelector(`[data-x='${j}'][data-y='${i}']`);
 						if (!item.firstChild) {
-							let currentPosition = {x: j, y: i};
-							this.storage.minesPlacement.push(currentPosition);
-							let mineIco = document.createElement("img");
-							mineIco.setAttribute("src", "images/bomb.png");
-							mineIco.classList.add("bombImage", "hideElement");
-							item.appendChild(mineIco);
-							minesCounter--;
+							let counter = 0;
+							this.areaNearCurrentTarget.forEach((elem) => {
+								if (elem && elem.dataset.x == +item.dataset.x && elem.dataset.y == +item.dataset.y) {
+									counter++;
+								}
+							})
+							if (!counter) {
+								let currentPosition = {x: j, y: i};
+								this.storage.minesPlacement.push(currentPosition);
+								let mineIco = document.createElement("img");
+								mineIco.setAttribute("src", "images/bomb.png");
+								mineIco.classList.add("bombImage", "hideElement");
+								item.appendChild(mineIco);
+								minesCounter--;
+							}
 						}
 					}
 				}
@@ -95,6 +103,12 @@ class MineGame {
 			return true;
 		}
 	}
+	firstMove (firstTarget) {
+		firstTarget.classList.remove("cellClass");
+		firstTarget.classList.add("blank", "cellClassOpen");
+		this.neighboursCheck(+firstTarget.dataset.x, +firstTarget.dataset.y);
+		this.minesSetter();
+	}
 	cellOpener (currentTarget) {
 		/*open first cell show mines number open empty cells*/
 		if (currentTarget.classList.contains("cellClass"))
@@ -104,6 +118,10 @@ class MineGame {
 				this.storage.timer++;
 				timerIndicator.children[0].innerHTML = this.storage.timer;
 				this.timer();
+			}
+			/*mercy*/
+			if (!document.querySelector('.cellClassOpen')) {
+				this.firstMove(currentTarget);
 			}
 			currentTarget.classList.replace("cellClass", "cellClassOpen");
 			if (!this.neighboursCheck(+currentTarget.dataset.x, +currentTarget.dataset.y)) {
@@ -222,7 +240,7 @@ menuBlock.addEventListener("click", (event) => {
 		menuBlock.classList.toggle("hideElement");
 		gameWindow.classList.toggle("hideElement");
 		game.fieldBuilder();
-		game.minesSetter();
+		//game.minesSetter();
 	}
 })
 gameField.addEventListener("click", (event) => {
